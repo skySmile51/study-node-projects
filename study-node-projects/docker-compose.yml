@@ -1,0 +1,22 @@
+services:
+  redis:
+    image: redis:latest #镜像
+    container_name: redis-service #容器名称
+    ports:
+      - 6379:6379 #映射端口
+    restart: always #设置重启策略
+    volumes:
+      - ./redis.conf:/etc/redis/redis.conf:ro #挂载配置文件
+      - redis_data:/data #挂载数据目录
+    command: redis-server /etc/redis/redis.conf #启动redis
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping'] #检查命令
+      interval: 10s #检查间隔
+      timeout: 5s #检查超时时间
+      retries: 3 #检查重试次数
+      start_period: 30s #启动时间
+    environment:
+      - TZ=Asia/Shanghai #设置时区
+
+volumes:
+  redis_data:
